@@ -460,41 +460,42 @@ class CampusKart {
 
     // 21. A helper function that takes an item object and returns a complete HTML string for its card.
     createItemCard(item) {
-        // Uses a ternary operator to conditionally set the price display based on the item's mode.
-        const priceDisplay = item.mode === 'donate' ? 
-            '<div class="item-price free">FREE</div>' :
-            item.mode === 'borrow' ?
-            '<div class="item-price free">BORROW</div>' :
-            `<div class="item-price">$${item.price.toFixed(2)}</div>`;
+    // Conditionally set the price
+    const priceDisplay = item.mode === 'donate'
+        ? '<div class="item-price free">FREE</div>'
+        : item.mode === 'borrow'
+        ? '<div class="item-price free">BORROW</div>'
+        : `<div class="item-price">$${item.price.toFixed(2)}</div>`;
 
-        // Conditionally displays either the item's image or a default icon if no image is available.
-        const imageDisplay = item.image ?
-            `<img src="${item.image}" alt="${item.name}">` :
-            '<i class="fas fa-image"></i>';
+    // Conditionally set the image
+    const imageDisplay = item.image && item.image.trim() !== ""
+        ? `<img src="${item.image}" alt="${item.name}">`
+        : `<img src="/images/image.png" alt="No Image Available">`;
 
-        // Returns a multi-line HTML string using template literals (backticks).
-        return `
-            <div class="item-card">
-                <div class="item-image">
-                    ${imageDisplay}
-                </div>
-                <div class="item-content">
-                    <div class="item-header">
-                        <h3 class="item-title">${item.name}</h3>
-                        <div class="item-badges">
-                            <span class="badge category">${this.getCategoryName(item.category)}</span>
-                            <span class="badge mode-${item.mode}">${this.getModeName(item.mode)}</span>
-                        </div>
-                    </div>
-                    ${priceDisplay}
-                    ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
-                    <button class="contact-seller-btn" data-item-id="${item.id}">
-                        <i class="fas fa-envelope"></i> Contact Seller
-                    </button>
-                </div>
+    // Return card template
+    return `
+        <div class="item-card">
+            <div class="item-image">
+                ${imageDisplay}
             </div>
-        `;
-    }
+            <div class="item-content">
+                <div class="item-header">
+                    <h3 class="item-title">${item.name}</h3>
+                    <div class="item-badges">
+                        <span class="badge category">${this.getCategoryName(item.category)}</span>
+                        <span class="badge mode-${item.mode}">${this.getModeName(item.mode)}</span>
+                    </div>
+                </div>
+                ${priceDisplay}
+                ${item.description ? `<p class="item-description">${item.description}</p>` : ''}
+                <button class="contact-seller-btn" data-item-id="${item.id}">
+                    <i class="fas fa-envelope"></i> Contact Seller
+                </button>
+            </div>
+        </div>
+    `;
+}
+
 
     // 22. Helper function to map category codes to full names.
     getCategoryName(category) {
@@ -548,11 +549,8 @@ class CampusKart {
     logout() {
         // Removes the current user's data from local storage.
         localStorage.removeItem('campuskart_current_user');
-        this.showNotification('Logged out successfully!', 'success');
-        // Redirects the user to the login page after a short delay.
-        setTimeout(() => {
-            window.location.href = 'index.html';
-        }, 1500);
+        localStorage.removeItem('campuskart_items');
+        location.reload();
     }
 
     // 28. A reusable function to display a notification banner on the screen.
@@ -580,7 +578,7 @@ class CampusKart {
                     mode: 'buy',
                     price: 45.99,
                     description: 'Barely used graphing calculator, perfect for math and engineering courses.',
-                    image: "images/calculator.png", // This is the line that points to the image file.
+                    image: "/images/calculator.png", // This is the line that points to the image file.
                     sellerId: 'sample',
                     sellerName: 'Alex Johnson',
                     sellerCollege: 'State University',
@@ -594,7 +592,7 @@ class CampusKart {
                     mode: 'donate',
                     price: 0,
                     description: 'Clean lab coat, used for one semester. Great condition.',
-                    image: "images/labCoat.png", // This is the line that points to the image file.
+                    image: "/images/labCoat.png", // This is the line that points to the image file.
                     sellerId: 'sample',
                     sellerName: 'Sarah Chen',
                     sellerCollege: 'Tech Institute',
@@ -608,7 +606,7 @@ class CampusKart {
                     mode: 'borrow',
                     price: 0,
                     description: 'Latest edition, available for borrowing for the semester.',
-                    image: "images/organicchem.png", // This is the line that points to the image file.
+                    image: "/images/organicchem.png", // This is the line that points to the image file.
                     sellerId: 'sample',
                     sellerName: 'Mike Rodriguez',
                     sellerCollege: 'Community College',
@@ -622,7 +620,7 @@ class CampusKart {
                     mode: 'buy',
                     price: 12.50,
                     description: 'Brand new spiral notebooks, perfect for note-taking.',
-                    image: "images/image.png", // This is the line that points to the image file.
+                    image: "/images/image.png", // This is the line that points to the image file.
                     sellerId: 'sample',
                     sellerName: 'Emma Wilson',
                     sellerCollege: 'Liberal Arts College',
